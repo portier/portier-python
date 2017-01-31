@@ -15,7 +15,10 @@ with codecs.open(os.path.join(here, 'CONTRIBUTORS.rst'),
     CONTRIBUTORS = f.read()
 
 
-REQUIREMENTS = []
+REQUIREMENTS = [
+    'jwt',
+    'requests',
+]
 
 
 setup(name='portier-python',
