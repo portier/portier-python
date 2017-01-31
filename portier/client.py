@@ -67,7 +67,7 @@ def get_verified_email(broker_url, token, audience, issuer, cache):
     .. _PyJWT: https://github.com/jpadilla/pyjwt
     """
     # Retrieve this broker's public keys
-    keys = discover_keys(broker_url)
+    keys = discover_keys(broker_url, cache)
 
     # Locate the specific key used to sign this JWT via its ``kid`` header.
     raw_header, _, _ = token.partition('.')
