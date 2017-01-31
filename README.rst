@@ -12,7 +12,7 @@ Portier authentication Python helpers
     :target: https://coveralls.io/r/Natim/portier-python
 
 *portier-python* is a set of helpers that you can use to authenticate
- your user with `the Portier Identity Provider <https://portier.io/>`_.
+your user with `the Portier Identity Provider <https://portier.io/>`_.
 
 * `Issue tracker <https://github.com/Natim/portier-python/issues>`_
 
