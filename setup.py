@@ -16,7 +16,8 @@ with codecs.open(os.path.join(here, 'CONTRIBUTORS.rst'),
 
 
 REQUIREMENTS = [
-    'jwt',
+    'cryptography',
+    'PyJWT',
     'requests',
 ]
 
