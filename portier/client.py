@@ -30,7 +30,7 @@ def discover_keys(broker_url, cache):
     jwks = cache.get(cache_key)
     if not jwks:
         # Fetch Discovery Document
-        res = requests.get('%s/.well-known/openid-configuration' % broker_url)
+        res = requests.get('%s/.well-known/openid-configuration' % broker_url.rstrip('/'))
         discovery = res.json()
         if 'jwks_uri' not in discovery:
             raise ValueError('No jwks_uri in discovery document')
