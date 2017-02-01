@@ -71,7 +71,7 @@ def get_verified_email(broker_url, token, audience, issuer, cache):
 
     # Locate the specific key used to sign this JWT via its ``kid`` header.
     raw_header, _, _ = token.partition('.')
-    header = json.loads(b64decode(raw_header).decode('utf-8'))
+    header = json.loads(b64decode(raw_header.encode('ascii')).decode('utf-8'))
     try:
         pub_key = keys[header['kid']]
     except KeyError:

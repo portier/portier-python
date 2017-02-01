@@ -18,51 +18,47 @@ DECODED_JWT = {
 }
 REDIRECT_URI = "http://redirect_uri"
 
+empty_cache = mock.MagicMock()
+empty_cache.get.return_value = None
+
 
 # Test discover_keys helper
 
 def test_discover_key_call_the_well_known_url_and_the_jwks_uri():
-    cache = mock.MagicMock()
-    cache.get.return_value = None
+    empty_cache.reset_mock()
     with mock.patch("portier.client.requests") as mocked_requests:
         mocked_requests.get.return_value.json.side_effect = (
             {"jwks_uri": JWKS_URI},
             {"keys": []}
         )
-        keys = discover_keys(BROKER_URL, cache)
+        keys = discover_keys(BROKER_URL, empty_cache)
 
     assert isinstance(keys, dict)
 
     assert mocked_requests.get.call_count == 2
-    mocked_requests.get.assert_any_call(
-        "http://broker-url.tld/.well-known/openid-configuration")
-    mocked_requests.get.assert_any_call(
-        JWKS_URI)
+    mocked_requests.get.assert_any_call("http://broker-url.tld/.well-known/openid-configuration")
+    mocked_requests.get.assert_any_call(JWKS_URI)
 
-    assert cache.get.call_count == 1
-    assert cache.set.call_count == 1
+    assert empty_cache.get.call_count == 1
+    assert empty_cache.set.call_count == 1
 
 
 def test_discover_key_raises_a_value_error_if_jwks_uri_is_not_found():
-    cache = mock.MagicMock()
-    cache.get.return_value = None
     with mock.patch("portier.client.requests") as mocked_requests:
         mocked_requests.get.return_value.json.return_value = {}
         with pytest.raises(ValueError) as e:
-            discover_keys(BROKER_URL, cache)
+            discover_keys(BROKER_URL, empty_cache)
         assert "No jwks_uri in discovery document" in str(e)
 
 
 def test_discover_key_raises_a_value_error_if_keys_not_found():
-    cache = mock.MagicMock()
-    cache.get.return_value = None
     with mock.patch("portier.client.requests") as mocked_requests:
         mocked_requests.get.return_value.json.side_effect = (
             {"jwks_uri": JWKS_URI},
             {}
         )
         with pytest.raises(ValueError) as e:
-            discover_keys(BROKER_URL, cache)
+            discover_keys(BROKER_URL, empty_cache)
         assert "No keys found in JWK Set" in str(e)
 
 
@@ -71,7 +67,7 @@ def test_get_verified_email_validate_the_subject_resembles_an_email_address():
     cache = mock.MagicMock()
     cache.get.side_effect = (
         {"keys": [KEY]},
-        None
+        REDIRECT_URI
     )
     with mock.patch("portier.client.jwt") as mocked_jwt:
         mocked_jwt.decode.return_value = {
@@ -101,7 +97,7 @@ def test_get_verified_email_validate_it_can_decode_the_jwt_payload():
     cache = mock.MagicMock()
     cache.get.side_effect = (
         {"keys": [KEY]},
-        None
+        REDIRECT_URI
     )
     with mock.patch("portier.client.jwt") as mocked_jwt:
         mocked_jwt.decode.side_effect = Exception("Foobar")
