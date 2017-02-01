@@ -1,6 +1,6 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
-from jwt.utils import b64_decode as b64decode
+from jwt.utils import base64url_decode as b64decode
 
 
 # Public API

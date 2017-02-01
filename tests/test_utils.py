@@ -1,6 +1,3 @@
-import os
-from jwt.utils import b64_encode, base64_to_int
-
 from portier.utils import jwk_to_rsa
 
 
