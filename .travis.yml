@@ -1,0 +1,19 @@
+language: python
+python: 2.7
+sudo: false
+env:
+    - TOX_ENV=py27
+    - TOX_ENV=flake8
+install:
+    - pip install tox
+script:
+    - tox -e $TOX_ENV
+after_success:
+    # Report coverage results to coveralls.io
+    - pip install coveralls
+    - coveralls
+matrix:
+  include:
+    - python: 3.5
+      env:
+        - TOX_ENV=py35

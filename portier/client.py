@@ -30,7 +30,7 @@ def discover_keys(broker_url, cache):
     jwks = cache.get(cache_key)
     if not jwks:
         # Fetch Discovery Document
-        res = requests.get('%s/.well-known/openid-configuration' % broker_url)
+        res = requests.get('%s/.well-known/openid-configuration' % broker_url.rstrip('/'))
         discovery = res.json()
         if 'jwks_uri' not in discovery:
             raise ValueError('No jwks_uri in discovery document')
@@ -67,11 +67,11 @@ def get_verified_email(broker_url, token, audience, issuer, cache):
     .. _PyJWT: https://github.com/jpadilla/pyjwt
     """
     # Retrieve this broker's public keys
-    keys = discover_keys(broker_url)
+    keys = discover_keys(broker_url, cache)
 
     # Locate the specific key used to sign this JWT via its ``kid`` header.
     raw_header, _, _ = token.partition('.')
-    header = json.loads(b64decode(raw_header).decode('utf-8'))
+    header = json.loads(b64decode(raw_header.encode('ascii')).decode('utf-8'))
     try:
         pub_key = keys[header['kid']]
     except KeyError:
