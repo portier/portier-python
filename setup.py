@@ -23,7 +23,7 @@ REQUIREMENTS = [
 
 
 setup(name='portier-python',
-      version='0.1.1',
+      version='0.2.0.dev0',
       description='Portier authentication Python helpers.',
       long_description=README + "\n\n" + CHANGELOG + "\n\n" + CONTRIBUTORS,
       license='Apache License (2.0)',
