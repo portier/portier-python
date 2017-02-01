@@ -74,7 +74,11 @@ def test_get_verified_email_validate_the_subject_resembles_an_email_address():
             "sub": "invalid subject"
         }
         with pytest.raises(ValueError) as e:
-            get_verified_email(BROKER_URL, TOKEN, "audience", "issuer", cache)
+            get_verified_email(broker_url=BROKER_URL,
+                               token=TOKEN,
+                               audience="audience",
+                               issuer="issuer",
+                               cache=cache)
         assert "Invalid email address: invalid subject" in str(e)
 
 
@@ -89,7 +93,11 @@ def test_get_verified_email_validate_it_can_find_a_public_key():
             "sub": "invalid subject"
         }
         with pytest.raises(ValueError) as e:
-            get_verified_email(BROKER_URL, TOKEN, "audience", "issuer", cache)
+            get_verified_email(broker_url=BROKER_URL,
+                               token=TOKEN,
+                               audience="audience",
+                               issuer="issuer",
+                               cache=cache)
         assert "Cannot find public key with ID abc" in str(e)
 
 
@@ -102,7 +110,11 @@ def test_get_verified_email_validate_it_can_decode_the_jwt_payload():
     with mock.patch("portier.client.jwt") as mocked_jwt:
         mocked_jwt.decode.side_effect = Exception("Foobar")
         with pytest.raises(ValueError) as e:
-            get_verified_email(BROKER_URL, TOKEN, "audience", "issuer", cache)
+            get_verified_email(broker_url=BROKER_URL,
+                               token=TOKEN,
+                               audience="audience",
+                               issuer="issuer",
+                               cache=cache)
         assert "Invalid JWT: Foobar" in str(e)
 
 
@@ -115,7 +127,11 @@ def test_get_verified_email_validate_the_nonce():
     with mock.patch("portier.client.jwt") as mocked_jwt:
         mocked_jwt.decode.return_value = DECODED_JWT
         with pytest.raises(ValueError) as e:
-            get_verified_email(BROKER_URL, TOKEN, "audience", "issuer", cache)
+            get_verified_email(broker_url=BROKER_URL,
+                               token=TOKEN,
+                               audience="audience",
+                               issuer="issuer",
+                               cache=cache)
         assert "Invalid, expired, or re-used nonce" in str(e)
 
 
@@ -127,5 +143,9 @@ def test_get_verified_return_the_subject_and_redirect_uri():
     )
     with mock.patch("portier.client.jwt") as mocked_jwt:
         mocked_jwt.decode.return_value = DECODED_JWT
-        result = get_verified_email(BROKER_URL, TOKEN, "audience", "issuer", cache)
+        result = get_verified_email(broker_url=BROKER_URL,
+                                    token=TOKEN,
+                                    audience="audience",
+                                    issuer="issuer",
+                                    cache=cache)
         assert result == (DECODED_JWT['sub'], REDIRECT_URI)
