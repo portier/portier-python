@@ -2,6 +2,5 @@ flake8
 mock
 pytest
 pytest-cache
-pytest-capturelog
 pytest-cover
 pytest-sugar
